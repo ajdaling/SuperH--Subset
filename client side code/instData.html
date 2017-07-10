@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SuperH Index</title>
+
+<!-- 	<link rel = "stylesheet" type = "text/css" href="../../client_side/lib/css/dashboard.css">
+	<link rel="stylesheet" href="../../client_side/lib/DataTables/media/css/jquery.dataTables.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="stylesheet" href="instData2.css">
+    <link href="../../client_side/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+ -->
+<link type="text/css" href="lib/dc.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="lib/colorbrewer.css"/>
+    <link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
+		<link href="css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/css/bootstrap-slider.min.css">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/style_cyto.css" rel="stylesheet" />
+<link rel="stylesheet" href="yadcf-master/jquery.dataTables.yadcf.css">
+<link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="../../client_side/lib/css/dashboard.css">
+<link type = "text/css" rel = "styelsheet" href="instData2.css"/>
+    <link rel="stylesheet" href="../../client_side/lib/DataTables/media/css/jquery.dataTables.min.css">
+    <link rel='stylesheet prefetch' href='https://ppl.wdsserve.com/1.0/ppl/ppl.min.css'>
+    <link rel="stylesheet" href="../../client_side/lib/css/facet.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <link href="../../client_side/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="../../client_side/lib/metisMenu/metisMenu.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../home/style.css">
+    <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+
+</head>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    }
+    #cy {
+        width: 100%;
+        height: 600px;
+    }
+    #loading {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    margin-top: -0.5em;
+    font-size: 2em;
+    color: #000;
+    }
+    #loading.loaded {
+    display: none;
+    }
+    #layoutButtons {
+        position: absolute;
+        top: 5%;
+        right: 2%;
+    }
+    input[type='button'] {
+        width: 100%;
+    }
+    #userSelection {
+        position: absolute;
+        top: 5%;
+        left: 2%;
+        width: 10%;
+        display: none;
+    }
+    .tt-dropdown-menu {
+  background: #fff;
+  width: 14em;
+  border: 1px solid #ccc;
+  max-height: 80vh;
+  max-height: calc( 100vh - 4em );
+  overflow: auto;
+  margin-top: 0.5em;
+}
+
+.tt-menu {    /* used to be tt-dropdown-menu in older versions */
+  margin-top: 4px;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+.tt-suggestion + .tt-suggestion {
+  border-top: 1px solid #ccc;
+}
+</style>
+
+<body>
+
+	<!-- Begin Top Nav -->
+	  <div class="row" id="content-row">
+  	<nav class="navbar navbar-fixed-top" role="banner">
+  		<div class="container-fluid" style ="background-color:rgba(255,255,255,0.8)">
+  				<a class="navbar-brand" href="http://www.superHindex.com" target="_blank" style="display:"><img src="../../client_side/lib/images/superlogo.png" style="color: blue; height: 44px; width:auto;"></a>
+  				<ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-envelope fa-fw" style="color:#283a75 "></i> <i class="fa fa-caret-down" style="color:#283a75 "></i>
+                </a>
+                <ul class="dropdown-menu dropdown-messages">
+                    <li>
+                        <a href="#">
+                            <div>
+                                <strong>John Smith</strong>
+                                <span class="pull-right text-muted">
+                                    <em>Yesterday</em>
+                                </span>
+                            </div>
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <strong>John Smith</strong>
+                                <span class="pull-right text-muted">
+                                    <em>Yesterday</em>
+                                </span>
+                            </div>
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <strong>John Smith</strong>
+                                <span class="pull-right text-muted">
+                                    <em>Yesterday</em>
+                                </span>
+                            </div>
+                            <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>Read All Messages</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-messages -->
+            </li>
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-tasks fa-fw" style="color:#283a75 "></i> <i class="fa fa-caret-down" style="color:#283a75 "></i>
+                </a>
+                <ul class="dropdown-menu dropdown-tasks">
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 1</strong>
+                                    <span class="pull-right text-muted">40% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                        <span class="sr-only">40% Complete (success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 2</strong>
+                                    <span class="pull-right text-muted">20% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                        <span class="sr-only">20% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 3</strong>
+                                    <span class="pull-right text-muted">60% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                        <span class="sr-only">60% Complete (warning)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <div>
+                                <p>
+                                    <strong>Task 4</strong>
+                                    <span class="pull-right text-muted">80% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                        <span class="sr-only">80% Complete (danger)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>See All Tasks</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-tasks -->
+            </li>
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw" style="color:#283a75 "></i> <i class="fa fa-caret-down" style="color:#283a75 "></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href = "#" class = "login-link"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+
+  				</ul>
+
+  		</div>
+  	</nav>
+
+  </div>
+<!-- End top nav -->
+
+
+	<!--main-->
+	<div class="container-fluid">
+		<div class="row" id="content-row">
+              <!--SIDE NAV-->
+              <nav class="main-menu" id="sidebar" data-spy="affix" data-offset-top="-1" style="position:fixed">
+
+              <div class="scrollbar" id="style-1" >
+
+              <ul>
+
+
+                      <li>
+                      <a class = "home-link">
+                      <i class="fa fa-home fa-lg"></i>
+                      <span class="nav-text">Home</span>
+                      </a>
+                      </li>
+
+                      <li>
+                      <a class = "newSearch-link">
+                      <i class="fa fa-search fa-lg"></i>
+                      <span class="nav-text">New Search</span>
+                      </a>
+                      </li>
+
+
+                      <li>
+                      <a class = "results-link">
+                      <i class="fa fa-list fa-lg"></i>
+                      <span class="nav-text">Search Results</span>
+                      </a>
+                      </li>
+
+                      <li>
+                      <a class="visualization-link">
+                      <i class="fa fa-area-chart fa-lg"></i>
+                      <span class="nav-text">Visualize</span>
+                      </a>
+                      </li>
+
+                      <li>
+                      <a class="report-link">
+                      <i class="fa fa-paper-plane-o fa-lg"></i>
+                      <span class="nav-text">Report</span>
+                      </a>
+                      </li>
+<li>
+					<a class="save-link">
+					<i class="fa fa-floppy-o fa-lg"></i>
+					<span class="nav-text">Save Session</span>
+					</a>
+					</li>
+
+                      </nav>
+
+			<div style="padding:120px 0px 0px 90px" >
+				<div class="row" >
+
+
+
+<div class = "col-md-9" style="padding:0 0 0 30px">
+					<!--<table  class="table table-bordered table-condensed">
+   					<thead>
+      					<tr class="header">
+         					<th><strong>Time Dependent Information</strong></th>
+      					</tr>
+						</thead>
+					</table>-->
+
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="col-xs-5 col-md-5"> <div  id="compRate"> </div> </div>
+							<div class="col-xs-5 col-md-5"> <div  id="compMom">  </div> </div>
+						</div>
+					</div>
+
+				</div>
+
+</div>
+
+
+<div class ="col-md-3" style="padding: 0 45px 0 30px">
+          <div class="panel panel-default"  >
+            <div class="panel-heading"></div>
+            <!-- Begin panel-body -->
+            <div class="panel-body">
+              <table id="inst_summary_data" class="table table-bordered table-condensed">
+                     <thead>
+                     <tr class="header">
+                         <th colspan="2"><strong>Institution Summary Information</strong></th>
+                     </tr>
+                 </thead>
+                     <tbody>
+                     <tr class="header"><th><strong>Item</strong></th><th><strong>Value</strong></th></tr>
+                     <tr ><td>Total docs</td><td> val </td></tr>
+                     <tr ><td>Pubmed</td><td> val </td></tr>
+                     <tr ><td>Patents</td><td> val </td></tr>
+                     <tr ><td>NIH</td><td> val </td></tr>
+                     <tr ><td>NSF</td><td> val </td></tr>
+                     <tr ><td>Clinical Trials</td><td> val </td></tr>
+                     </tbody>
+                 </table>
+            <!-- End panel-body -->
+            </div>
+          <!-- End panel -->
+          </div>
+        </div>
+
+
+</div>
+					<div class="row col-md-6" >
+					   <div class="classWithPad panel panel-primary">
+					      <div class="panel-heading"><strong>Publication Information for this Institution</strong></div>
+					      <table id="doc-subset-table" class="display  table-bordered table-hover table-condensed dt-right">
+					          <thead>
+					          <tr class="header">
+					                        <th>Year</th>
+					                        <th>Type</th>
+					                        <th>Institution</th>
+					                        <th>Investigator</th>
+					                        <th>Title</th>
+					          </tr>
+					          </thead>
+					      </table>
+						</div>
+
+  </div>
+<div class="row col-md-6" style="padding:0 0 0 30px" >
+							<!--<table  class="table table-bordered table-condensed">
+         	 					<thead>
+						         	 <tr class="header">
+						            	  <th colspan="2"><strong>Network</strong></th>
+						         	 </tr>
+								 </thead>
+               </table>-->
+
+                  <div class="row"  id="network-row" style="padding:0 0 0 15px">
+        					<div class="panel panel-primary">
+        							<nav id="myNavbar" class="navbar navbar-default my-nav-bar" role="navigation">
+                            				<div class="container">
+                                			<!-- Collect the nav links, forms, and other content for toggling -->
+                                    		<ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                                    <a id="save-as-png" href="#">Save as PNG</a>
+                                        </li>
+                                        <li class="btn-group" id="layout">
+                                        <p class="navbar-btn" data-toggle="buttons">
+          								<label class="btn btn-primary active" id="cola" >
+            								<input type="radio" name="options" autocomplete="off" checked> Cola
+          								</label>
+          								<label class="btn btn-primary" id="concentric" >
+         								   <input type="radio" name="options" autocomplete="off"> Concentric
+        								</label>
+        								</p>
+        								</li>
+                                        <form class="navbar-form navbar-left">
+                								<div class="form-group">
+                	  								<div id="search-wrapper">
+            											<input type="text" class="form-control" id="search" placeholder="&#xf002; Search">
+          										</div>
+                	  							</div>
+                	  						</form>
+                                    </ul>
+                                </div><!-- /.navbar-collapse -->
+                        			</nav>
+        							<div  id="cy"> </div>
+        			   			 	 <div id="loading">
+        			      			  	<span class="fa fa-refresh fa-spin"></span>
+        			   			 	</div>
+        					</div>
+        					</div>
+
+</div>
+
+
+
+		</div><!--/row-->
+	</div><!--/container-->
+</body>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="../../../config.js"></script>
+<script src="lib/d3/d3.v3.min.js"></script>
+<script src="lib/colorbrewer.js"></script>
+<script src="lib/cytoscape.js"></script>
+<script src="lib/cytoscape-panzoom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/bootstrap-slider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+<script src="lib/cola.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
+<script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.7.0/cytoscape-qtip.js"></script>
+<script src="lib/cytoscape-cola.js"></script>
+<script src="lib/crossfilter/js/crossfilter.min.js"></script>
+<script src="lib/dc.js"></script>
+<script type="text/javascript" src="yadcf-master/jquery.dataTables.yadcf.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="http://code.highcharts.com/maps/highcharts.js"></script>
+<script src="http://code.highcharts.com/maps/modules/map.js"></script>
+<script src="http://code.highcharts.com/maps/modules/data.js"></script>
+<script src="http://code.highcharts.com/maps/modules/exporting.js"></script>
+<script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
+<script src="instData.js"></script>
+<script src='myInstNetwork.js'></script>
+
+
+
+
+</html>
